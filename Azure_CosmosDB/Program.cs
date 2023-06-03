@@ -129,5 +129,41 @@ string containerName = "";
 //    await container.ReplaceItemAsync<Order>(item, id, new PartitionKey(category));
 
 //    Console.WriteLine("Item is Updated {0} ");
-
 //}
+
+/* Delete Item in CosmosDB */
+
+await DeleteItem();
+
+async Task DeleteItem()
+{
+    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+
+    Database database = cosmosClient.GetDatabase(databaseName);
+    Container container = database.GetContainer(containerName);
+
+    string orderId = "01";
+    string sqlQuery = $"SELECT o.id,o.category FROM Orders o WHERE o.orderId='{orderId}'";
+
+    string id = "";
+    string category = "";
+
+    QueryDefinition queryDefinition = new QueryDefinition(sqlQuery);
+
+    FeedIterator<Order> feedIterator = container.GetItemQueryIterator<Order>(queryDefinition);
+
+    while (feedIterator.HasMoreResults)
+    {
+        FeedResponse<Order> feedResponse = await feedIterator.ReadNextAsync();
+        foreach (Order order in feedResponse)
+        {
+            id = order.id;
+            category = order.category;
+        }
+    }
+
+    ItemResponse<Order> response = await container.DeleteItemAsync<Order>(id, new PartitionKey(category));
+
+    Console.WriteLine("Item is Deleted {0} ");
+
+}
