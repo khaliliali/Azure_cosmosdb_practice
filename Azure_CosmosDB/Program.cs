@@ -1,4 +1,5 @@
-﻿using Azure_CosmosDB;
+﻿using Azure.Core;
+using Azure_CosmosDB;
 using Microsoft.Azure.Cosmos;
 
 string cosmosEndpointUri = "";
@@ -333,4 +334,47 @@ string databaseName = "appdb";
 //        collection.createDocument(collectionLink, item);
 //    }
 
+//}*/
+
+
+/* Triggers in CosmosDB */
+
+//string containerName = "Orders";
+
+//await CreateTrigger();
+
+//async Task CreateTrigger()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+//    Container container = cosmosClient.GetContainer(databaseName, containerName);
+
+//    dynamic orderItem =
+//        new
+//        {
+//            id = Guid.NewGuid().ToString(),
+//            orderId = "O1",
+//            category = "Laptop"
+//        };
+
+//    await container.CreateItemAsync(orderItem, null, new ItemRequestOptions { PreTriggers = new List<string> { "validateItem" } });
+
+//    Console.WriteLine("Created Triggers ");
+//}
+
+////// *********___ Sample Code to Create Trigger : ___*********
+
+///*function validateItem()
+//{
+//    var context = getContext();
+//    var request = context.getRequest();
+//    var item = request.getBody();
+
+//    // Let's check if the property has the quantity
+//    // If not , we will set it to 0
+//    if (!("quantity" in item))
+//    {
+//        item["quantity"] = 0;
+//    }
+
+//    request.setBody(item);
 //}*/
