@@ -4,7 +4,6 @@ using Microsoft.Azure.Cosmos;
 string cosmosEndpointUri = "";
 string cosmosDBKey = "";
 string databaseName = "";
-string containerName = "";
 
 /* Create Cosmos DB */
 
@@ -21,6 +20,7 @@ string containerName = "";
 /* Create Container  */
 //await CreateContainer("appdb", "Orders","/category");
 
+//string containerName = "Orders";
 //async Task CreateContainer(string databaseName, string containerName, string partitionKey)
 //{
 //    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
@@ -38,6 +38,7 @@ string containerName = "";
 // await AddItems("03", "Mobile", 1300);
 // await AddItems("04", "Laptop", 13);
 
+//string containerName = "Orders";
 // async Task AddItems(string orderId, string category, int quantity)
 // {
 //     CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
@@ -64,6 +65,7 @@ string containerName = "";
 
 //await ReadItems();
 
+//string containerName = "Orders";
 //async Task ReadItems()
 //{
 //    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
@@ -94,6 +96,7 @@ string containerName = "";
 
 //await ReplaceItem();
 
+//string containerName = "Orders";
 //async Task ReplaceItem()
 //{
 //    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
@@ -129,41 +132,109 @@ string containerName = "";
 //    await container.ReplaceItemAsync<Order>(item, id, new PartitionKey(category));
 
 //    Console.WriteLine("Item is Updated {0} ");
+
 //}
+
 
 /* Delete Item in CosmosDB */
 
-await DeleteItem();
+//await DeleteItem();
 
-async Task DeleteItem()
+//string containerName = "Orders";
+//async Task DeleteItem()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+
+//    Database database = cosmosClient.GetDatabase(databaseName);
+//    Container container = database.GetContainer(containerName);
+
+//    string orderId = "01";
+//    string sqlQuery = $"SELECT o.id,o.category FROM Orders o WHERE o.orderId='{orderId}'";
+
+//    string id = "";
+//    string category = "";
+
+//    QueryDefinition queryDefinition = new QueryDefinition(sqlQuery);
+
+//    FeedIterator<Order> feedIterator = container.GetItemQueryIterator<Order>(queryDefinition);
+
+//    while (feedIterator.HasMoreResults)
+//    {
+//        FeedResponse<Order> feedResponse = await feedIterator.ReadNextAsync();
+//        foreach (Order order in feedResponse)
+//        {
+//            id = order.id;
+//            category = order.category;
+//        }
+//    }
+
+//    ItemResponse<Order> response = await container.DeleteItemAsync<Order>(id, new PartitionKey(category));
+
+//    Console.WriteLine("Item is Deleted {0} ");
+
+//}
+
+/* Add customers - Array of objects to the cosmosDB */
+string containerName = "Customers";
+
+await AddCustomer("C1", "Customer A", "Sydney",
+    new List<Order>()
+    {
+        new Order
+        {
+            orderId = "01",
+            category = "Laptop",
+            quantity = 100
+        },
+        new Order
+        {
+            orderId = "03",
+            category = "Desktop",
+            quantity = 74
+        }
+    });
+
+await AddCustomer("C2", "Customer B", "Shiraz",
+    new List<Order>()
+    {
+        new Order
+        {
+            orderId = "04",
+            category = "Laptop",
+            quantity = 13
+        }
+    });
+
+await AddCustomer("C3", "Customer C", "Tehran",
+    new List<Order>()
+    {
+        new Order
+        {
+            orderId = "02",
+            category = "PC",
+            quantity = 13
+        }
+    });
+
+
+async Task AddCustomer(string customerId, string customerName, string customerCity, List<Order> orders)
 {
     CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
 
     Database database = cosmosClient.GetDatabase(databaseName);
     Container container = database.GetContainer(containerName);
 
-    string orderId = "01";
-    string sqlQuery = $"SELECT o.id,o.category FROM Orders o WHERE o.orderId='{orderId}'";
-
-    string id = "";
-    string category = "";
-
-    QueryDefinition queryDefinition = new QueryDefinition(sqlQuery);
-
-    FeedIterator<Order> feedIterator = container.GetItemQueryIterator<Order>(queryDefinition);
-
-    while (feedIterator.HasMoreResults)
+    Customer customer = new Customer()
     {
-        FeedResponse<Order> feedResponse = await feedIterator.ReadNextAsync();
-        foreach (Order order in feedResponse)
-        {
-            id = order.id;
-            category = order.category;
-        }
-    }
+        customerId = customerId,
+        customerName = customerName,
+        customerCity = customerCity,
+        orders = orders
+    };
 
-    ItemResponse<Order> response = await container.DeleteItemAsync<Order>(id, new PartitionKey(category));
+    await container.CreateItemAsync<Customer>(customer, new PartitionKey(customerCity));
 
-    Console.WriteLine("Item is Deleted {0} ");
+    Console.WriteLine("Added customer with Id {0}", customer.customerId);
 
 }
+
