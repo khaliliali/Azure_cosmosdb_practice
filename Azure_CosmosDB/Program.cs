@@ -3,7 +3,7 @@ using Microsoft.Azure.Cosmos;
 
 string cosmosEndpointUri = "";
 string cosmosDBKey = "";
-string databaseName = "";
+string databaseName = "appdb";
 
 /* Create Cosmos DB */
 
@@ -175,66 +175,162 @@ string databaseName = "";
 //}
 
 /* Add customers - Array of objects to the cosmosDB */
-string containerName = "Customers";
+// string containerName = "Customers";
 
-await AddCustomer("C1", "Customer A", "Sydney",
-    new List<Order>()
-    {
-        new Order
-        {
-            orderId = "01",
-            category = "Laptop",
-            quantity = 100
-        },
-        new Order
-        {
-            orderId = "03",
-            category = "Desktop",
-            quantity = 74
-        }
-    });
+// await AddCustomer("C1", "Customer A", "Sydney",
+//     new List<Order>()
+//     {
+//         new Order
+//         {
+//             orderId = "01",
+//             category = "Laptop",
+//             quantity = 100
+//         },
+//         new Order
+//         {
+//             orderId = "03",
+//             category = "Desktop",
+//             quantity = 74
+//         }
+//     });
 
-await AddCustomer("C2", "Customer B", "Shiraz",
-    new List<Order>()
-    {
-        new Order
-        {
-            orderId = "04",
-            category = "Laptop",
-            quantity = 13
-        }
-    });
+// await AddCustomer("C2", "Customer B", "Shiraz",
+//     new List<Order>()
+//     {
+//         new Order
+//         {
+//             orderId = "04",
+//             category = "Laptop",
+//             quantity = 13
+//         }
+//     });
 
-await AddCustomer("C3", "Customer C", "Tehran",
-    new List<Order>()
-    {
-        new Order
-        {
-            orderId = "02",
-            category = "PC",
-            quantity = 13
-        }
-    });
+// await AddCustomer("C3", "Customer C", "Tehran",
+//     new List<Order>()
+//     {
+//         new Order
+//         {
+//             orderId = "02",
+//             category = "PC",
+//             quantity = 13
+//         }
+//     });
 
 
-async Task AddCustomer(string customerId, string customerName, string customerCity, List<Order> orders)
-{
-    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+// async Task AddCustomer(string customerId, string customerName, string customerCity, List<Order> orders)
+// {
+//     CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
 
-    Database database = cosmosClient.GetDatabase(databaseName);
-    Container container = database.GetContainer(containerName);
+//     Database database = cosmosClient.GetDatabase(databaseName);
+//     Container container = database.GetContainer(containerName);
 
-    Customer customer = new Customer()
-    {
-        customerId = customerId,
-        customerName = customerName,
-        customerCity = customerCity,
-        orders = orders
-    };
+//     Customer customer = new Customer()
+//     {
+//         customerId = customerId,
+//         customerName = customerName,
+//         customerCity = customerCity,
+//         orders = orders
+//     };
 
-    await container.CreateItemAsync<Customer>(customer, new PartitionKey(customerCity));
+//     await container.CreateItemAsync<Customer>(customer, new PartitionKey(customerCity));
 
-    Console.WriteLine("Added customer with Id {0}", customer.customerId);
+//     Console.WriteLine("Added customer with Id {0}", customer.customerId);
+// }
 
-}
+/* Call Stored Procedures in CosmosDB */
 
+//string containerName = "Orders";
+
+//await CallStoredProcedure();
+
+//async Task CallStoredProcedure()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+//    Container container = cosmosClient.GetContainer(databaseName, containerName);
+
+//    var result = await container.Scripts.ExecuteStoredProcedureAsync<string>("Display", new PartitionKey(""), null);
+
+//    Console.WriteLine(result);
+//}
+
+
+/* Create an Item in Stored Procedures of CosmosDB */
+
+//string containerName = "Orders";
+
+//await CallStoredProcedure();
+
+//async Task CallStoredProcedure()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+//    Container container = cosmosClient.GetContainer(databaseName, containerName);
+
+//    dynamic[] orderItems = new dynamic[]
+//    {
+//        new
+//        {
+//            id = Guid.NewGuid().ToString(),
+//            orderId = "01",
+//            category = "Laptop",
+//            quantity = 100
+//        },
+//        new
+//        {
+//            id = Guid.NewGuid().ToString(),
+//            orderId = "02",
+//            category = "Laptop",
+//            quantity = 230
+//        },
+//        new
+//        {
+//            id = Guid.NewGuid().ToString(),
+//            orderId = "03",
+//            category = "Laptop",
+//            quantity = 75
+//        }
+//    };
+
+//    var result = await container.Scripts.ExecuteStoredProcedureAsync<string>("createItems", new PartitionKey("Laptop"), new[] {orderItems});
+
+//    Console.WriteLine("Created Stored Procedures ", result);
+//}
+
+//// *********___ Sample Code to add in CosmosDB Stored Procedure part: ___*********
+//
+///*function createItems(items)
+//{
+//    var context = getContext();
+//    var response = context.getResponse();
+
+//    if (!items)
+//    {
+//        response.setBody("Error: Items are undefined");
+//        return;
+//    }
+
+//    var numOfItems = items.length;
+//    checkLength(numOfItems);
+
+//    for (let i = 0; i < numOfItems; i++)
+//    {
+//        createItem(items[i]);
+//    }
+
+//    response.setBody("Items added to collection");
+//    function checkLength(itemLength)
+//    {
+//        if (itemLength == 0)
+//        {
+//            response.setBody("Error: There are no items to add");
+//            return;
+//        }
+//    }
+
+//    function createItem(item)
+//    {
+//        var collection = getContext().getCollection();
+//        var collectionLink = collection.getSelfLink();
+//        collection.createDocument(collectionLink, item);
+//    }
+
+//}*/
