@@ -3,8 +3,8 @@ using Microsoft.Azure.Cosmos;
 
 string cosmosEndpointUri = "";
 string cosmosDBKey = "";
-string databaseName = "appdb";
-string containerName = "Orders";
+string databaseName = "";
+string containerName = "";
 
 /* Create Cosmos DB */
 
@@ -87,5 +87,47 @@ string containerName = "Orders";
 //            Console.WriteLine("Quantity {0}", order.quantity);
 //        }
 //    }
+
+//}
+
+/* Replace/Update Items in CosmosDB */
+
+//await ReplaceItem();
+
+//async Task ReplaceItem()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+
+//    Database database = cosmosClient.GetDatabase(databaseName);
+//    Container container = database.GetContainer(containerName);
+
+//    string orderId = "01";
+//    string sqlQuery = $"SELECT o.id,o.category FROM Orders o WHERE o.orderId='{orderId}'";
+
+//    string id = "";
+//    string category = "";
+
+//    QueryDefinition queryDefinition = new QueryDefinition(sqlQuery);
+
+//    FeedIterator<Order> feedIterator = container.GetItemQueryIterator<Order>(queryDefinition);
+
+//    while (feedIterator.HasMoreResults)
+//    {
+//        FeedResponse<Order> feedResponse = await feedIterator.ReadNextAsync();
+//        foreach (Order order in feedResponse)
+//        {
+//            id = order.id;
+//            category = order.category;
+//        }
+//    }
+
+//    ItemResponse<Order> response = await container.ReadItemAsync<Order>(id, new PartitionKey(category));
+//    var item = response.Resource;
+
+//    item.quantity = 150;
+
+//    await container.ReplaceItemAsync<Order>(item, id, new PartitionKey(category));
+
+//    Console.WriteLine("Item is Updated {0} ");
 
 //}
