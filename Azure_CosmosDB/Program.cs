@@ -58,3 +58,34 @@ string containerName = "Orders";
 //     Console.WriteLine("Request Unit (Ru) {0}", response.RequestCharge);
 
 // }
+
+
+/* Reading Items from CosmosDB */
+
+//await ReadItems();
+
+//async Task ReadItems()
+//{
+//    CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUri, cosmosDBKey);
+
+//    Database database = cosmosClient.GetDatabase(databaseName);
+//    Container container = database.GetContainer(containerName);
+
+//    string sqlQuery = "SELECT o.orderId,o.category,o.quantity FROM Orders o";
+
+//    QueryDefinition queryDefinition = new QueryDefinition(sqlQuery);
+
+//    FeedIterator<Order> feedIterator = container.GetItemQueryIterator<Order>(queryDefinition);
+
+//    while (feedIterator.HasMoreResults)
+//    {
+//        FeedResponse<Order> feedResponse = await feedIterator.ReadNextAsync();
+//        foreach (Order order in feedResponse)
+//        {
+//            Console.WriteLine("Order Id {0}", order.orderId);
+//            Console.WriteLine("category {0}", order.category);
+//            Console.WriteLine("Quantity {0}", order.quantity);
+//        }
+//    }
+
+//}
